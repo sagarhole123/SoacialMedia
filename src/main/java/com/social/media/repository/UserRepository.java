@@ -1,11 +1,13 @@
 package com.social.media.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.social.media.model.User;
+import com.social.media.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	User findByusername(String username);
+	Optional<User> findByUsername(String username);
 
 }

@@ -1,37 +1,37 @@
-package com.social.media.model;
+package com.social.media.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "User")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "UserName", nullable = false)
 	private String username;
+
+	@Column(name = "Full Name", nullable = true)
+	private String fullName;
+
+	@Column(name = "Email", nullable = false)
 	private String email;
+
+	@Column(name = "Password", nullable = false)
 	private String password;
 
-	public User(Long id, String username, String email, String password) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-	}
+	public User() {
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getUsername() {
@@ -40,6 +40,14 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public String getEmail() {

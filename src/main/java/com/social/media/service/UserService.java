@@ -1,29 +1,14 @@
 package com.social.media.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
-import com.social.media.model.User;
-import com.social.media.repository.UserRepository;
+import com.social.media.dto.UserDto;
+import com.social.media.entities.User;
 
-import lombok.RequiredArgsConstructor;
+public interface UserService {
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
+	User registerUser(UserDto userDto);
 
-	@Autowired
-	UserRepository userRepository;
+	User updateUser(String username, UserDto userDto) throws NotFoundException;
 
-	public User saveUser(User user) {
-		return userRepository.save(user);
-	}
-
-	public User loginUser(String username, String password) {
-		User userExists = userRepository.findByusername(username);
-		if (userExists == null || !userExists.getPassword().equals(password)) {
-			return null; // Invalid login
-		}
-		return userExists;
-	}
 }
