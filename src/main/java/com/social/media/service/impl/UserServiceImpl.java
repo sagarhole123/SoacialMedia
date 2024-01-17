@@ -1,7 +1,9 @@
 package com.social.media.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +22,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User registerUser(UserDto userDto) {
 		// Check if the username is already taken
-		if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+		if (userRepository.findByUserName(userDto.getUsername()).isPresent()) {
 			throw new IllegalArgumentException("Username is already taken");
 		}
 
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User updateUser(String username, UserDto userDto) throws NotFoundException {
 
-		User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException());
+		User user = userRepository.findByUserName(username).orElseThrow(() -> new NotFoundException());
 
 		user.setUsername(userDto.getUsername());
 		user.setFullName(userDto.getFullName());
@@ -55,4 +56,20 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
+	@Override
+	public void deleteUser(String username) {
+		Optional<User> user = userRepository.findByUserName(username);
+		if (user.isPresent()) {
+			userRepository.delete(user.get());
+		} else {
+			System.out.println("User " + username + " not found for deletion.");
+		}
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		List<User> allUsers = userRepository.findAll();
+		return allUsers;
+		
+	}
 }

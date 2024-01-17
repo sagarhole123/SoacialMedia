@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "60470114-539c-4f42-b0a4-b5ae081d645a",
+		"name": "Social Media",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32322355"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Sign Up",
+					"item": [
+						{
+							"name": "Create User",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"sagar\",\r\n  \"password\": \"sagar\",\r\n  \"fullName\": \"Sagar Hole\",\r\n  \"email\": \"sagar.hole@mail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/user/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User2",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"sanjay\",\r\n  \"password\": \"sanjay\",\r\n  \"fullName\": \"sanjay Hole\",\r\n  \"email\": \"sanjay.hole@mail.com\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/user/register",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Sign In",
+					"item": [
+						{
+							"name": "Sign In",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"sagar\",\r\n  \"password\": \"sagar\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/user/login",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
