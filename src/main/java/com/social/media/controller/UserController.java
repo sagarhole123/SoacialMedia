@@ -43,15 +43,23 @@ public class UserController {
 	private UserRepository userRepository;
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
-
-	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
+
+	private final AuthenticationManager authenticationManager;
+
+	// Constructor injection in UserController
+	@Autowired
+	public UserController(UserService userService, UserRepository userRepository,
+			AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+		this.userService = userService;
+		this.userRepository = userRepository;
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenProvider = jwtTokenProvider;
+	}
 
 	@PostMapping("/login")
 	public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
 		Optional<User> user = userRepository.findByUserName(loginRequest.getUsername());
-
 		if (user.isPresent()) {
 			try {
 				Authentication authentication = authenticationManager
@@ -59,26 +67,28 @@ public class UserController {
 								loginRequest.getPassword()));
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
-				String jwt = jwtTokenProvider.generateToken(authentication);
 
 				LOGGER.info("Successful authentication for user: {}", loginRequest.getUsername());
-
-				return ResponseEntity.ok(jwt);
+				return ResponseEntity.ok("Login success");
 			} catch (BadCredentialsException e) {
-				LOGGER.error("Authentication failed for user: {}", loginRequest.getUsername());
+				LOGGER.error("Authentication failed");
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 						.body("Invalid credentials. Please sign up first.");
 			}
 		} else {
-			LOGGER.error("User not found: {}", loginRequest.getUsername());
+			LOGGER.error("User not found: {}");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found. Please sign up first.");
 		}
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<User> registerUser(@RequestBody UserDto user) {
-		User newUser = userService.registerUser(user);
-		return ResponseEntity.ok(newUser);
+	public ResponseEntity<?> registerUser(@RequestBody UserDto user) {
+		try {
+			User newUser = userService.registerUser(user);
+			return ResponseEntity.ok(newUser);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 	}
 
 	@PutMapping("/update/{userName}")

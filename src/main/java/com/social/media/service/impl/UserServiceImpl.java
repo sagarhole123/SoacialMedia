@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +14,6 @@ import com.social.media.entities.User;
 import com.social.media.repository.UserRepository;
 import com.social.media.service.UserService;
 
-@Configuration
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -70,6 +68,6 @@ public class UserServiceImpl implements UserService {
 	public List<User> getAllUsers() {
 		List<User> allUsers = userRepository.findAll();
 		return allUsers;
-		
+
 	}
 }

@@ -1,32 +1,44 @@
 package com.social.media.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
+	@Value("${app.jwt.secret}")
+	private String jwtSecret;
 
-    @Value("${app.jwt.expiration}")
-    private long jwtExpirationInMs;
+	@Value("${app.jwt.expiration}")
+	private int jwtExpirationInMs;
 
-    @SuppressWarnings("deprecation")
 	public String generateToken(Authentication authentication) {
-        return Jwts.builder()
-            .setSubject(authentication.getName())
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime() + jwtExpirationInMs))
-            .signWith(SignatureAlgorithm.HS512, jwtSecret)
-            .compact();
-    }
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-    // Other methods for token validation, username extraction, etc.
+		Date now = new Date();
+		Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+
+		Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+
+		return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date()).setExpiration(expiryDate)
+				.signWith(key, SignatureAlgorithm.HS512).compact();
+	}
+
+	@PostConstruct
+	protected void init() {
+		jwtSecret = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
+	}
+
 }
-
